@@ -1,71 +1,38 @@
-# Nosso Cantinho
+# Nosso Cantinho · versão de planejamento v2
 
-Aplicação web privada para guardar memórias e organizar lugares/experiências que vocês querem conhecer. Projeto independente do RPG, preparado para compartilhar o mesmo Supabase futuramente.
+Starter atualizado · ajustes de interface v3. Inclui:
+- Abas Memórias, Desejos, Calendário e Feedbacks.
+- Memórias com recorrência anual e múltiplas fotos; seleção de capa entre as fotos já salvas.
+- Desejos com estados Desejamos, Planejado e Realizado. Planejado exige data/hora e local.
+- Seção de próximos encontros para desejos planejados ainda não realizados.
+- Ao marcar um desejo como realizado, o app oferece criar uma memória vinculada.
+- Feedbacks com data como título, dois campos independentes (Roberto e Tamiris) e vínculos N:N com memórias e desejos.
+- Navegação cruzada entre registros relacionados.
 
-## Requisitos
+## Executar
+1. Extraia o ZIP.
+2. Na pasta do projeto, execute `npm install`.
+3. Execute `npm run dev`.
 
-- Node.js 20 ou superior (recomendado)
-- npm
-- Projeto Supabase
+## Estado desta entrega
+A interface está em **modo demonstração local**, usando localStorage. Não conecte ainda dados pessoais nem considere a integração Supabase pronta. O schema SQL em `supabase/schema.sql` é a proposta relacional consolidada, mas ainda requer revisão e implementação dos fluxos de autenticação, criação/convite do casal, `couple_id` em todas as operações, upload seguro e URLs assinadas para fotos. O upload de fotos desta demonstração usa URLs temporárias do navegador; recarregar a página pode invalidá-las. A edição acrescenta novas fotos e permite escolher capa entre as fotos existentes, mas a remoção individual de fotos ainda não foi implementada.
 
-## 1. Instalar e executar
+## Modelo de dados
+- `memories`: memórias e flag `is_anniversary`.
+- `memory_photos`: fotos múltiplas e uma capa por memória.
+- `experiences`: lista de desejos, agendamento e local.
+- `feedbacks`: autor, data do feedback e texto.
+- `feedback_memories` e `feedback_experiences`: relações N:N.
+- `memories.experience_id`: memória opcional originada de um desejo.
 
-```bash
-npm install
-npm run dev
-```
+O SQL inclui RLS e bucket privado como ponto de partida. Revise as políticas e os fluxos de associação do casal antes de executar em produção.
 
-Sem configurar o Supabase, a aplicação abre em **modo demonstração**, usando `localStorage` neste navegador. Isso serve para conhecer a interface; os dados não são compartilhados entre dispositivos nem entre usuários.
-
-## 2. Configurar Supabase
-
-1. Crie um projeto no Supabase.
-2. No painel, abra **SQL Editor**.
-3. Execute todo o conteúdo de `supabase/schema.sql`.
-4. Em Project Settings → API, copie a Project URL e a chave pública `anon`/publishable.
-5. Copie `.env.example` para `.env.local`.
-6. Preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
-7. Reinicie `npm run dev`.
-
-**Nunca use a chave `service_role` no frontend.** Ela dá acesso privilegiado e não deve ser publicada.
-
-## 3. Criar o espaço compartilhado
-
-- Crie a primeira conta pela tela de cadastro.
-- Depois do login, use o SQL Editor para criar o espaço e obter o convite, por enquanto:
-  ```sql
-  select * from public.create_couple('Nosso Cantinho');
-  ```
-  A chamada acima precisa ser executada com o contexto de usuário autenticado; o SQL Editor normalmente executa como postgres e não representa esse usuário. Para o MVP, a criação/entrada do casal deve ser feita por uma sessão autenticada via RPC `create_couple` e `join_couple`. A interface inicial ainda não inclui a tela de convite.
-- Cadastre a segunda conta e associe-a ao casal com `join_couple('CODIGO')` a partir de uma sessão autenticada.
-
-## Estado atual / importante
-
-Este ZIP é um **starter funcional de interface**, não uma versão pronta para armazenar dados reais no Supabase sem ajustes. A camada de autenticação está ligada, e o SQL inclui o modelo de casal, membros, memórias, experiências e bucket privado. Antes de usar com dados reais, ainda é necessário concluir no frontend:
-- tela para criar o espaço do casal e mostrar o código de convite;
-- tela para entrar com código de convite;
-- carregar e incluir `couple_id` nas operações de memórias e experiências;
-- usar URLs assinadas do Storage para exibir imagens privadas;
-- salvar o caminho da foto no campo `photo_url`.
-
-Enquanto isso, o modo demonstração permite testar o visual e os fluxos básicos localmente. Não coloque fotografias íntimas nem informações pessoais no modo demonstração.
-
-## Build
-
-```bash
-npm run build
-npm run preview
-```
-
-## Estrutura
-
-```text
-src/
-  App.tsx
-  main.tsx
-  styles.css
-  types.ts
-  lib/supabase.ts
-supabase/
-  schema.sql
-```
+## Ajustes v3
+- Identificação dos participantes como Roberto e Tamiris.
+- Tipografia Prata nos títulos.
+- Associações feitas por listas recolhíveis (dropdowns); detalhes exibem somente os vínculos existentes.
+- Remoção de fotografias já adicionadas e seleção da capa entre as restantes.
+- Altura da capa limitada para evitar imagens verticais cobrirem o cartão.
+- Sombras suaves em cartões e modais.
+- Feedbacks com dois campos de texto e data como título.
+- Calendário movido para a última posição do menu.
