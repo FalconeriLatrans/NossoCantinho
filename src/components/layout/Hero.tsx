@@ -1,5 +1,3 @@
-import { Heart } from 'lucide-react'
-
 export function Hero() {
   return (
     <section className="hero">
