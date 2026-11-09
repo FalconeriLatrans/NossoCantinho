@@ -71,14 +71,13 @@ export function WishDetail({ wish }: { wish: Experience }) {
       {(memories.length > 0 || feedbacks.length > 0) && (
         <RelatedSection title="Relacionados">
           {memories.map((m) => (
-            <RelatedLink key={m.id} icon={<BookHeart />} label="Memória" onClick={() => nav.openDetail({ kind: 'memory', id: m.id })}>
+            <RelatedLink key={m.id} theme="memory" icon={<BookHeart />} label="Memória" onClick={() => nav.openDetail({ kind: 'memory', id: m.id })}>
               {m.title}
             </RelatedLink>
           ))}
           {feedbacks.map((f) => (
             <RelatedLink
-              key={f.id}
-              icon={<MessageCircleHeart />}
+              key={f.id} theme="feedback" icon={<MessageCircleHeart />}
               label="Feedback"
               onClick={() => nav.openDetail({ kind: 'feedback', id: f.id })}
             >

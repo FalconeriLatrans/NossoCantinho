@@ -1,5 +1,5 @@
 import { BookHeart, CalendarDays, MapPin, MessageCircleHeart, type LucideIcon } from 'lucide-react'
-import { TAB_LABEL, TAB_ORDER } from '../../constants'
+import { TAB_LABEL, TAB_ORDER, TAB_THEME, themeClass } from '../../constants'
 import type { Tab } from '../../types'
 
 const TAB_ICON: Record<Tab, LucideIcon> = {
@@ -25,7 +25,7 @@ export function TabNav({ active, counts, onChange }: TabNavProps) {
           <button
             key={tab}
             type="button"
-            className={`tabs__item ${tab === active ? 'is-active' : ''}`}
+            className={`tabs__item ${themeClass(TAB_THEME[tab])} ${tab === active ? 'is-active' : ''}`}
             aria-current={tab === active ? 'page' : undefined}
             onClick={() => onChange(tab)}
           >

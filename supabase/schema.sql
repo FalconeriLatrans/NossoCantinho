@@ -165,6 +165,9 @@ create trigger feedbacks_updated_at before update on public.feedbacks
 -- -----------------------------------------------------------------------------
 -- Fluxo de criação/convite do casal (antes não havia como criar um casal pelo app)
 -- -----------------------------------------------------------------------------
+drop function if exists public.create_couple(text);
+drop function if exists public.join_couple(text);
+
 create or replace function public.create_couple(couple_name text default 'Nosso Cantinho')
 returns public.couples
 language plpgsql

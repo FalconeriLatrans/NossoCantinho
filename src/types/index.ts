@@ -6,7 +6,12 @@ export type LocalDateTime = string
 export interface Photo {
   id: string
   is_cover: boolean
+  /** Caminho no Supabase Storage (`<couple_id>/<memory_id>/<id>.webp`). Ausente no modo local. */
+  path?: string
 }
+
+/** O mínimo para exibir uma foto. */
+export type PhotoRef = Pick<Photo, 'id' | 'path'>
 
 export interface Memory {
   id: string
@@ -61,11 +66,13 @@ export interface EntityRef {
 
 export type Tab = 'memories' | 'wishes' | 'feedbacks' | 'calendar'
 
+/** Tema de cores de cada seção (ver styles/themes.css). */
+export type Theme = EntityKind
+
 /* ---------- Valores de formulário ---------- */
 
 /** Foto no formulário: já salva (sem `file`) ou recém-adicionada (com `file`). */
-export interface PhotoDraft {
-  id: string
+export interface PhotoDraft extends PhotoRef {
   file?: File
 }
 

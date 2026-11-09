@@ -29,6 +29,23 @@ export function parseLocalDateTime(value: LocalDateTime | null | undefined): Dat
   return new Date(Number(y), Number(mo) - 1, Number(d), Number(h), Number(mi))
 }
 
+/** Date → `YYYY-MM-DDTHH:mm` no fuso local (formato do `<input type="datetime-local">`). */
+export function toLocalDateTime(date: Date): LocalDateTime {
+  return `${toISODate(date)}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+/** `YYYY-MM-DDTHH:mm` local → ISO 8601 em UTC (para colunas `timestamptz`). */
+export function localDateTimeToISO(value: LocalDateTime | null | undefined): string | null {
+  return parseLocalDateTime(value)?.toISOString() ?? null
+}
+
+/** ISO 8601 (vindo do banco) → `YYYY-MM-DDTHH:mm` local. */
+export function isoToLocalDateTime(value: string | null | undefined): LocalDateTime | null {
+  if (!value) return null
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? null : toLocalDateTime(date)
+}
+
 export function formatLongDate(value: ISODate): string {
   const date = parseISODate(value)
   if (!date) return 'Sem data'

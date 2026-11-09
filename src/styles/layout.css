@@ -206,3 +206,34 @@
     align-items: flex-start;
   }
 }
+
+/* ---------- Botão da conta (modo Supabase) ---------- */
+.account-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 260px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: #f5ede3;
+  color: #8a6b5b;
+  font-size: 12px;
+}
+
+.account-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.account-btn__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .account-btn__label {
+    display: none;
+  }
+}

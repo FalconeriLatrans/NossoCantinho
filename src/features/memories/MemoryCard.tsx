@@ -15,9 +15,9 @@ export function MemoryCard({ memory, onOpen }: MemoryCardProps) {
   const cover = getCover(memory)
 
   return (
-    <ClickableCard onOpen={onOpen} label={`Abrir memória: ${memory.title}`}>
+    <ClickableCard theme="memory" onOpen={onOpen} label={`Abrir memória: ${memory.title}`}>
       <div className="card__cover">
-        <PhotoImage photoId={cover?.id} alt="" />
+        <PhotoImage photo={cover} alt="" />
         {memory.is_anniversary && <span className="badge badge--floating">♥ Anual</span>}
       </div>
       <div className="card__body">

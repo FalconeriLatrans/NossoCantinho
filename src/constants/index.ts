@@ -1,4 +1,4 @@
-import type { Tab, WishStatus } from '../types'
+import type { Tab, Theme, WishStatus } from '../types'
 
 export const APP_NAME = 'Nosso Cantinho'
 
@@ -33,6 +33,17 @@ export const TAB_LABEL: Record<Tab, string> = {
   calendar: 'Calendário',
 }
 
+/** Tema de cores de cada aba (o calendário mistura as três cores). */
+export const TAB_THEME: Record<Tab, Theme | null> = {
+  memories: 'memory',
+  wishes: 'wish',
+  feedbacks: 'feedback',
+  calendar: null,
+}
+
+/** Classe CSS do tema: `theme-memory`, `theme-wish`, `theme-feedback`. */
+export const themeClass = (theme: Theme | null | undefined) => (theme ? `theme-${theme}` : '')
+
 /** Slug usado na URL (#memorias) para manter a aba ao recarregar a página. */
 export const TAB_HASH: Record<Tab, string> = {
   memories: 'memorias',
@@ -45,6 +56,8 @@ export const STORAGE_KEYS = {
   memories: 'nosso-cantinho:v4:memories',
   wishes: 'nosso-cantinho:v4:wishes',
   feedbacks: 'nosso-cantinho:v4:feedbacks',
+  /** Marca que os dados deste aparelho já foram enviados ao Supabase (ou ignorados). */
+  importHandled: 'nosso-cantinho:v4:import-handled',
   /** Chaves da versão anterior, lidas uma única vez para migração. */
   legacy: {
     memories: 'nc_memories_v3',
@@ -63,3 +76,10 @@ export const PHOTO_SETTINGS = {
 } as const
 
 export const TOAST_DURATION_MS = 3500
+
+/** Bucket privado do Supabase Storage onde ficam as fotos. */
+export const PHOTO_BUCKET = 'memory-photos'
+/** Validade das URLs assinadas das fotos (segundos). */
+export const SIGNED_URL_TTL = 60 * 60
+/** Intervalo mínimo entre recargas automáticas ao voltar para o app (ms). */
+export const SYNC_MIN_INTERVAL_MS = 15_000

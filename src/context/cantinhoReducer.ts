@@ -1,6 +1,7 @@
 import type { CantinhoData, Experience, Feedback, Memory } from '../types'
 
 export type CantinhoAction =
+  | { type: 'replace'; data: CantinhoData }
   | { type: 'memory/upsert'; memory: Memory }
   | { type: 'memory/delete'; id: string }
   | { type: 'wish/upsert'; wish: Experience }
@@ -19,6 +20,9 @@ function upsert<T extends { id: string }>(list: T[], item: T): T[] {
  */
 export function cantinhoReducer(state: CantinhoData, action: CantinhoAction): CantinhoData {
   switch (action.type) {
+    case 'replace':
+      return action.data
+
     case 'memory/upsert':
       return { ...state, memories: upsert(state.memories, action.memory) }
 

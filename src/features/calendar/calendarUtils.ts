@@ -1,4 +1,4 @@
-import type { Experience, ISODate, Memory } from '../../types'
+import type { Experience, Feedback, ISODate, Memory } from '../../types'
 import { datePart, isLeapYear, toISODate } from '../../utils/date'
 
 export const WEEKDAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
@@ -35,6 +35,10 @@ export function memoryFallsOn(memory: Memory, date: ISODate): boolean {
   if (year <= origYear) return false
   if (origMonthDay === monthDay) return true
   return origMonthDay === '02-29' && monthDay === '02-28' && !isLeapYear(Number(year))
+}
+
+export function feedbackFallsOn(feedback: Feedback, date: ISODate): boolean {
+  return feedback.feedback_date === date
 }
 
 export function wishFallsOn(wish: Experience, date: ISODate): boolean {

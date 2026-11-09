@@ -87,18 +87,14 @@
   text-overflow: ellipsis;
 }
 
-.calendar__event--memory {
-  background: #f8e9e5;
-  color: #a45e55;
-}
-
-.calendar__event--wish {
-  background: #eaf0e7;
-  color: #637c5e;
-}
 
 .calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
   margin: 13px 0 0;
+  padding: 0;
+  list-style: none;
   font-size: 11px;
   color: #93867e;
 }

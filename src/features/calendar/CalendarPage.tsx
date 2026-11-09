@@ -4,7 +4,7 @@ import { useNavigation } from '../../app/navigation'
 import { SectionHeading } from '../../components/ui/SectionHeading'
 import { useCantinho } from '../../context/CantinhoContext'
 import { formatMonthYear, todayISO } from '../../utils/date'
-import { buildMonth, memoryFallsOn, WEEKDAYS, wishFallsOn } from './calendarUtils'
+import { buildMonth, feedbackFallsOn, memoryFallsOn, WEEKDAYS, wishFallsOn } from './calendarUtils'
 import './calendar.css'
 
 const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1)
@@ -22,7 +22,7 @@ export function CalendarPage() {
 
   return (
     <>
-      <SectionHeading title="Nossa história, dia após dia." subtitle="Memórias, comemorações e planos futuros." />
+      <SectionHeading title="Nossa história, dia após dia." subtitle="Memórias, comemorações, planos e feedbacks." />
 
       <div className="calendar">
         <div className="calendar__head">
@@ -54,6 +54,7 @@ export function CalendarPage() {
           {days.map(({ date, day }) => {
             const memories = data.memories.filter((m) => memoryFallsOn(m, date))
             const wishes = data.wishes.filter((w) => wishFallsOn(w, date))
+            const feedbacks = data.feedbacks.filter((f) => feedbackFallsOn(f, date))
             return (
               <div key={date} className={`calendar__day ${date === today ? 'is-today' : ''}`}>
                 <b className="calendar__number">{day}</b>
@@ -61,7 +62,7 @@ export function CalendarPage() {
                   <button
                     key={m.id}
                     type="button"
-                    className="calendar__event calendar__event--memory"
+                    className="calendar__event theme-memory"
                     onClick={() => nav.openDetail({ kind: 'memory', id: m.id })}
                     title={m.title}
                   >
@@ -72,18 +73,42 @@ export function CalendarPage() {
                   <button
                     key={w.id}
                     type="button"
-                    className="calendar__event calendar__event--wish"
+                    className="calendar__event theme-wish"
                     onClick={() => nav.openDetail({ kind: 'wish', id: w.id })}
                     title={w.title}
                   >
                     ● {w.title}
                   </button>
                 ))}
+                {feedbacks.map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    className="calendar__event theme-feedback"
+                    onClick={() => nav.openDetail({ kind: 'feedback', id: f.id })}
+                    title="Feedback do casal"
+                  >
+                    ✎ Feedback
+                  </button>
+                ))}
               </div>
             )
           })}
         </div>
-        <p className="calendar__legend">♥ Memórias e comemorações · ● Desejos planejados</p>
+        <ul className="calendar__legend">
+          <li className="theme-memory">
+            <span className="legend-dot" aria-hidden />
+            Memórias e comemorações
+          </li>
+          <li className="theme-wish">
+            <span className="legend-dot" aria-hidden />
+            Desejos planejados
+          </li>
+          <li className="theme-feedback">
+            <span className="legend-dot" aria-hidden />
+            Feedbacks
+          </li>
+        </ul>
       </div>
     </>
   )

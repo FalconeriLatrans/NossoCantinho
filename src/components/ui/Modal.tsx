@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { X } from 'lucide-react'
+import { themeClass } from '../../constants'
+import type { Theme } from '../../types'
 
 interface ModalProps {
   title: ReactNode
@@ -9,11 +11,13 @@ interface ModalProps {
   size?: 'sm' | 'md'
   /** `top` fica acima de outros modais (ex.: confirmação sobre um detalhe). */
   layer?: 'base' | 'top'
+  /** Cores da seção (memória, desejo, feedback). */
+  theme?: Theme
 }
 
 let openModals = 0
 
-export function Modal({ title, eyebrow, onClose, children, size = 'md', layer = 'base' }: ModalProps) {
+export function Modal({ title, eyebrow, onClose, children, size = 'md', layer = 'base', theme }: ModalProps) {
   const titleId = useId()
   const dialogRef = useRef<HTMLElement>(null)
   const onCloseRef = useRef(onClose)
@@ -52,7 +56,7 @@ export function Modal({ title, eyebrow, onClose, children, size = 'md', layer = 
     >
       <section
         ref={dialogRef}
-        className={`dialog dialog--${size}`}
+        className={`dialog dialog--${size} ${themeClass(theme)}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

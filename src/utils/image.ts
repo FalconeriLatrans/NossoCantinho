@@ -2,6 +2,8 @@ import { PHOTO_SETTINGS } from '../constants'
 
 export class ImageProcessingError extends Error {}
 
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
 function loadImageElement(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file)
@@ -60,12 +62,13 @@ export async function compressImage(file: File): Promise<Blob> {
     if (!ctx) throw new ImageProcessingError('Seu navegador não permitiu processar a imagem.')
     ctx.drawImage(source, 0, 0, canvas.width, canvas.height)
 
-    const blob =
-      (await canvasToBlob(canvas, 'image/webp', PHOTO_SETTINGS.quality)) ??
-      (await canvasToBlob(canvas, 'image/jpeg', PHOTO_SETTINGS.quality))
+    // Safari antigo não gera WebP (devolve PNG): nesse caso usa JPEG.
+    let blob = await canvasToBlob(canvas, 'image/webp', PHOTO_SETTINGS.quality)
+    if (!blob || blob.type !== 'image/webp') blob = await canvasToBlob(canvas, 'image/jpeg', PHOTO_SETTINGS.quality)
     if (!blob) throw new ImageProcessingError(`Não foi possível comprimir "${file.name}".`)
-    // Se a "compressão" ficou maior (imagem pequena já otimizada), mantém o original.
-    return blob.size < file.size ? blob : file
+    // Se a "compressão" ficou maior (imagem pequena já otimizada), mantém o original
+    // — desde que seja um formato aceito pelo Storage.
+    return blob.size >= file.size && ACCEPTED_TYPES.includes(file.type) ? file : blob
   } finally {
     close?.()
   }

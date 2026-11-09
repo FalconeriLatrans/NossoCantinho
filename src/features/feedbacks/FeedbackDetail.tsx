@@ -25,12 +25,12 @@ export function FeedbackDetail({ feedback }: { feedback: Feedback }) {
       {(memories.length > 0 || wishes.length > 0) && (
         <RelatedSection title="Relacionados">
           {memories.map((m) => (
-            <RelatedLink key={m.id} icon={<BookHeart />} label="Memória" onClick={() => nav.openDetail({ kind: 'memory', id: m.id })}>
+            <RelatedLink key={m.id} theme="memory" icon={<BookHeart />} label="Memória" onClick={() => nav.openDetail({ kind: 'memory', id: m.id })}>
               {m.title}
             </RelatedLink>
           ))}
           {wishes.map((w) => (
-            <RelatedLink key={w.id} icon={<MapPin />} label="Desejo" onClick={() => nav.openDetail({ kind: 'wish', id: w.id })}>
+            <RelatedLink key={w.id} theme="wish" icon={<MapPin />} label="Desejo" onClick={() => nav.openDetail({ kind: 'wish', id: w.id })}>
               {w.title}
             </RelatedLink>
           ))}

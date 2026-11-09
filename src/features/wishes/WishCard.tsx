@@ -6,7 +6,7 @@ import { StatusBadge } from './StatusBadge'
 
 export function WishCard({ wish, onOpen }: { wish: Experience; onOpen: () => void }) {
   return (
-    <ClickableCard onOpen={onOpen} label={`Abrir desejo: ${wish.title}`} className={wish.status === 'done' ? 'card--done' : ''}>
+    <ClickableCard theme="wish" onOpen={onOpen} label={`Abrir desejo: ${wish.title}`} className={wish.status === 'done' ? 'card--done' : ''}>
       <div className="card__body">
         <div className="card__row">
           <StatusBadge status={wish.status} />

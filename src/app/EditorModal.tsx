@@ -8,6 +8,7 @@ import { MemoryForm } from '../features/memories/MemoryForm'
 import { useCompleteWish } from '../features/wishes/useCompleteWish'
 import { WishForm } from '../features/wishes/WishForm'
 import type { FeedbackFormValues, MemoryFormValues, WishFormValues } from '../types'
+import { errorMessage } from '../utils/errors'
 import { useNavigation, type EditorState } from './navigation'
 
 const TITLES = {
@@ -68,11 +69,11 @@ export function EditorModal({ editor, onClose }: EditorModalProps) {
         const saved = await saveMemory(values, editor.id)
         finish(saved.id, 'Memória salva.')
       } catch (error) {
-        toast(error instanceof Error ? error.message : 'Não foi possível salvar a memória.', 'error')
+        toast(errorMessage(error, 'Não foi possível salvar a memória.'), 'error')
       }
     }
     return (
-      <Modal title={title} onClose={requestClose}>
+      <Modal title={title} onClose={requestClose} theme={editor.kind}>
         <MemoryForm
           memory={memory}
           prefill={editor.prefill}
@@ -87,27 +88,40 @@ export function EditorModal({ editor, onClose }: EditorModalProps) {
   if (editor.kind === 'wish') {
     const wish = editor.id ? data.wishes.find((w) => w.id === editor.id) : undefined
     if (editor.id && !wish) return null
-    const handleSubmit = (values: WishFormValues) => {
-      const saved = saveWish(values, editor.id)
-      finish(saved.id, 'Desejo salvo.')
-      // Marcou como realizado pelo formulário: oferece criar a memória também.
-      if (saved.status === 'done' && wish?.status !== 'done') void offerMemory(saved)
+    const handleSubmit = async (values: WishFormValues) => {
+      try {
+        const saved = await saveWish(values, editor.id)
+        finish(saved.id, 'Desejo salvo.')
+        // Marcou como realizado pelo formulário: oferece criar a memória também.
+        if (saved.status === 'done' && wish?.status !== 'done') void offerMemory(saved)
+      } catch (error) {
+        toast(errorMessage(error, 'Não foi possível salvar o desejo.'), 'error')
+      }
     }
     return (
-      <Modal title={title} onClose={requestClose}>
-        <WishForm wish={wish} onSubmit={handleSubmit} onDirtyChange={onDirtyChange} />
+      <Modal title={title} onClose={requestClose} theme={editor.kind}>
+        <WishForm
+          wish={wish}
+          linkedMemories={wish ? data.memories.filter((m) => m.experience_id === wish.id).length : 0}
+          onSubmit={handleSubmit}
+          onDirtyChange={onDirtyChange}
+        />
       </Modal>
     )
   }
 
   const feedback = editor.id ? data.feedbacks.find((f) => f.id === editor.id) : undefined
   if (editor.id && !feedback) return null
-  const handleSubmit = (values: FeedbackFormValues) => {
-    const saved = saveFeedback(values, editor.id)
-    finish(saved.id, 'Feedback salvo.')
+  const handleSubmit = async (values: FeedbackFormValues) => {
+    try {
+      const saved = await saveFeedback(values, editor.id)
+      finish(saved.id, 'Feedback salvo.')
+    } catch (error) {
+      toast(errorMessage(error, 'Não foi possível salvar o feedback.'), 'error')
+    }
   }
   return (
-    <Modal title={title} onClose={requestClose}>
+    <Modal title={title} onClose={requestClose} theme={editor.kind}>
       <FeedbackForm
         feedback={feedback}
         memories={data.memories}

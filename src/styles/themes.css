@@ -1,0 +1,260 @@
+/* =============================================================================
+   Temas de cor por seção
+   -----------------------------------------------------------------------------
+   Memórias → rosado · Desejos → verde-sálvia · Feedbacks → azul
+   Qualquer elemento dentro de .theme-memory / .theme-wish / .theme-feedback
+   herda as variáveis --t-*. Fora deles, valem as cores neutras do app.
+   ============================================================================= */
+
+:root {
+  --t-bg: var(--color-surface);
+  --t-soft: var(--color-soft);
+  --t-border: var(--color-border);
+  --t-strong: var(--color-accent);
+  --t-text: var(--color-accent-text);
+  --t-ink: var(--color-text-strong);
+  --t-glow: rgba(173, 107, 96, 0.18);
+}
+
+.theme-memory {
+  --t-bg: #fdf5f3;
+  --t-soft: #f8e3de;
+  --t-border: #efd5ce;
+  --t-strong: #a85d52;
+  --t-text: #95544a;
+  --t-ink: #5c3c37;
+  --t-glow: rgba(168, 93, 82, 0.18);
+}
+
+.theme-wish {
+  --t-bg: #f4f8f2;
+  --t-soft: #e1eedc;
+  --t-border: #d2e3cc;
+  --t-strong: #57805a;
+  --t-text: #4a6f4c;
+  --t-ink: #3b4e3c;
+  --t-glow: rgba(87, 128, 90, 0.18);
+}
+
+.theme-feedback {
+  --t-bg: #f3f6fb;
+  --t-soft: #dfe8f5;
+  --t-border: #cfdcee;
+  --t-strong: #5375a3;
+  --t-text: #46668f;
+  --t-ink: #36465d;
+  --t-glow: rgba(83, 117, 163, 0.18);
+}
+
+/* ---------- Abas ---------- */
+.tabs__item svg {
+  color: var(--t-strong);
+  opacity: 0.75;
+}
+
+.tabs__item.is-active {
+  color: var(--t-strong);
+  border-bottom-color: var(--t-strong);
+}
+
+.tabs__item.is-active svg {
+  opacity: 1;
+}
+
+.tabs__item.is-active .tabs__count {
+  background: var(--t-soft);
+  color: var(--t-text);
+}
+
+/* ---------- Página ---------- */
+.section-heading h2 {
+  color: var(--t-ink);
+}
+
+.section-heading p {
+  color: var(--t-text);
+}
+
+.search:focus-within {
+  box-shadow: 0 0 0 3px var(--t-glow);
+}
+
+/* ---------- Botões e filtros ---------- */
+.btn--primary {
+  background: var(--t-strong);
+}
+
+.btn--soft {
+  background: var(--t-soft);
+  color: var(--t-text);
+}
+
+.chip:hover {
+  border-color: var(--t-border);
+}
+
+.chip.is-active {
+  background: var(--t-strong);
+  border-color: var(--t-strong);
+}
+
+/* ---------- Cartões ---------- */
+.card {
+  background: var(--t-bg);
+  border-color: var(--t-border);
+}
+
+.card:hover {
+  box-shadow: 0 10px 28px var(--t-glow);
+}
+
+/* Desejos e feedbacks não têm foto: uma faixa colorida no topo os identifica */
+.card--wish,
+.card--feedback {
+  border-top: 4px solid var(--t-strong);
+}
+
+.card__title {
+  color: var(--t-ink);
+}
+
+.card__date {
+  color: var(--t-text);
+}
+
+.card__meta svg {
+  color: var(--t-strong);
+}
+
+.card__cover,
+.photo-placeholder {
+  background: var(--t-soft);
+  color: var(--t-strong);
+}
+
+.badge--floating {
+  color: var(--t-strong);
+}
+
+.empty-state {
+  border-color: var(--t-border);
+  background: color-mix(in srgb, var(--t-bg) 70%, transparent);
+}
+
+.empty-state__icon {
+  background: var(--t-soft);
+  color: var(--t-strong);
+}
+
+/* ---------- Desejos: próximos encontros ---------- */
+.upcoming__item {
+  background: var(--t-bg);
+  border-color: var(--t-border);
+  border-left-color: var(--t-strong);
+}
+
+.upcoming__location svg {
+  color: var(--t-strong);
+}
+
+/* ---------- Feedbacks ---------- */
+.feedback-entry {
+  background: var(--color-surface);
+  border-left: 3px solid var(--t-strong);
+}
+
+.feedback-entry b {
+  color: var(--t-text);
+}
+
+/* ---------- Modais ---------- */
+.dialog[class*='theme-'] {
+  border-top: 6px solid var(--t-strong);
+  background: linear-gradient(180deg, var(--t-bg), var(--color-surface-warm) 160px);
+}
+
+.dialog .eyebrow {
+  color: var(--t-text);
+}
+
+.dialog__title {
+  color: var(--t-ink);
+}
+
+.dialog__close {
+  background: var(--t-soft);
+  color: var(--t-text);
+}
+
+.detail__meta {
+  color: var(--t-text);
+}
+
+.detail__facts svg,
+.external-link {
+  color: var(--t-strong);
+}
+
+.related-link {
+  background: var(--t-soft);
+  color: var(--t-text);
+}
+
+/* ---------- Formulários ---------- */
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--t-strong);
+  box-shadow: 0 0 0 3px var(--t-glow);
+}
+
+.check input {
+  accent-color: var(--t-strong);
+}
+
+.field-group {
+  border-color: var(--t-border);
+}
+
+.field-group legend,
+.dropdown summary {
+  color: var(--t-text);
+}
+
+.photo-manager__item.is-cover .photo-manager__img {
+  border-color: var(--t-strong);
+}
+
+.photo-manager__add {
+  border-color: var(--t-border);
+  color: var(--t-strong);
+}
+
+.photo-manager__add:hover,
+.photo-manager__add:focus-within {
+  background: var(--t-soft);
+}
+
+/* ---------- Calendário ---------- */
+.calendar__event {
+  background: var(--t-soft);
+  color: var(--t-text);
+}
+
+.calendar__event:hover {
+  background: var(--t-border);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--t-strong);
+  vertical-align: middle;
+}
+
+.subheading {
+  color: var(--t-ink);
+}

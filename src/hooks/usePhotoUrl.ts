@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react'
-import { photoStore } from '../services/photoStore'
+import { useCantinho } from '../context/CantinhoContext'
+import type { PhotoRef } from '../types'
 
 type PhotoUrlState = { status: 'loading' | 'missing'; url: null } | { status: 'ready'; url: string }
 
-/** Carrega do IndexedDB a URL de exibição de uma foto salva. */
-export function usePhotoUrl(photoId: string | null | undefined): PhotoUrlState {
+/** URL de exibição de uma foto salva (IndexedDB no modo local, URL assinada no Supabase). */
+export function usePhotoUrl(photo: PhotoRef | null | undefined): PhotoUrlState {
+  const { getPhotoUrl } = useCantinho()
   const [state, setState] = useState<PhotoUrlState>({ status: 'loading', url: null })
+  const id = photo?.id
+  const path = photo?.path
 
   useEffect(() => {
-    if (!photoId) {
+    if (!id) {
       setState({ status: 'missing', url: null })
       return
     }
     let active = true
     setState({ status: 'loading', url: null })
-    photoStore
-      .getUrl(photoId)
+    getPhotoUrl({ id, path })
       .then((url) => {
         if (active) setState(url ? { status: 'ready', url } : { status: 'missing', url: null })
       })
@@ -25,7 +28,7 @@ export function usePhotoUrl(photoId: string | null | undefined): PhotoUrlState {
     return () => {
       active = false
     }
-  }, [photoId])
+  }, [id, path, getPhotoUrl])
 
   return state
 }

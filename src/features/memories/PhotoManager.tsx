@@ -87,5 +87,5 @@ function PhotoThumb({ photo }: { photo: PhotoDraft }) {
   if (photo.file) {
     return previewUrl ? <img src={previewUrl} alt="" className="photo-manager__img" /> : <div className="photo-manager__img" />
   }
-  return <PhotoImage photoId={photo.id} alt="" className="photo-manager__img" />
+  return <PhotoImage photo={photo} alt="" className="photo-manager__img" />
 }

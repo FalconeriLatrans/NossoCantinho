@@ -1,15 +1,19 @@
 /**
- * Cliente Supabase (ainda não utilizado pela interface).
+ * Cliente Supabase.
  *
- * O app hoje funciona em modo local (localStorage + IndexedDB). Quando a
- * integração for implementada, basta criar um repositório que use este
- * cliente com a mesma interface de `services/localRepository.ts`.
+ * Com VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY preenchidas, o app exige login
+ * e grava tudo no Supabase. Sem elas, funciona em modo local (só no navegador).
  */
 import { createClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+const url = import.meta.env.VITE_SUPABASE_URL?.trim()
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
 
 export const isSupabaseConfigured = Boolean(url && key && !url.includes('SEU-PROJETO'))
 
-export const supabase = isSupabaseConfigured && url && key ? createClient(url, key) : null
+export const supabase =
+  isSupabaseConfigured && url && key
+    ? createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true } })
+    : null
+
+export type SupabaseClientType = NonNullable<typeof supabase>

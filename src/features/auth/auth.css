@@ -1,0 +1,134 @@
+/* ---------- Telas centralizadas (login, configuração, carregamento) ---------- */
+.centered-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background:
+    radial-gradient(circle at 15% 10%, var(--color-accent-soft), transparent 45%),
+    radial-gradient(circle at 85% 90%, #f5ede3, transparent 40%),
+    var(--color-bg);
+}
+
+.centered-screen__card {
+  width: min(420px, 100%);
+  padding: 32px 28px;
+  background: var(--color-surface-warm);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.centered-screen__card.is-wide {
+  width: min(680px, 100%);
+}
+
+.centered-screen__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  font-size: 18px;
+  color: var(--color-text-strong);
+}
+
+.centered-screen__title {
+  margin: 0 0 6px;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.centered-screen__subtitle {
+  margin: 0 0 22px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.centered-screen__footer {
+  margin: 20px 0 0;
+  font-size: 13px;
+  color: var(--color-text-subtle);
+  overflow-wrap: anywhere;
+}
+
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent-strong);
+  text-decoration: underline;
+  font-size: inherit;
+}
+
+/* ---------- Criar / entrar no casal ---------- */
+.setup-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.setup-option {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.setup-option h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.setup-option__icon {
+  width: 26px;
+  height: 26px;
+  color: var(--color-accent);
+}
+
+@media (max-width: 560px) {
+  .setup-options {
+    grid-template-columns: 1fr;
+  }
+
+  .centered-screen__card {
+    padding: 26px 18px;
+  }
+}
+
+/* ---------- Conta ---------- */
+.account__line {
+  margin: 0 0 10px;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.invite-code {
+  margin-top: 6px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+}
+
+.invite-code p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--color-soft-text);
+}
+
+.invite-code__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.invite-code code {
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  color: var(--color-accent-strong);
+}

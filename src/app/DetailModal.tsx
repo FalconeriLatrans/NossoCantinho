@@ -9,6 +9,7 @@ import { MemoryDetail } from '../features/memories/MemoryDetail'
 import { WishDetail } from '../features/wishes/WishDetail'
 import type { EntityRef } from '../types'
 import { formatLongDate } from '../utils/date'
+import { errorMessage } from '../utils/errors'
 import { useNavigation } from './navigation'
 
 const DELETE_COPY = {
@@ -39,11 +40,15 @@ export function DetailModal({ entity }: { entity: EntityRef }) {
     const copy = DELETE_COPY[entity.kind]
     const ok = await confirm({ ...copy, confirmLabel: 'Excluir', tone: 'danger' })
     if (!ok) return
-    if (entity.kind === 'memory') await deleteMemory(entity.id)
-    if (entity.kind === 'wish') deleteWish(entity.id)
-    if (entity.kind === 'feedback') deleteFeedback(entity.id)
-    nav.closeDetail()
-    toast('Registro excluído.')
+    try {
+      if (entity.kind === 'memory') await deleteMemory(entity.id)
+      if (entity.kind === 'wish') await deleteWish(entity.id)
+      if (entity.kind === 'feedback') await deleteFeedback(entity.id)
+      nav.closeDetail()
+      toast('Registro excluído.')
+    } catch (error) {
+      toast(errorMessage(error, 'Não foi possível excluir.'), 'error')
+    }
   }
 
   const header = memory
@@ -53,7 +58,7 @@ export function DetailModal({ entity }: { entity: EntityRef }) {
       : { eyebrow: 'Feedback do casal', title: feedback ? formatLongDate(feedback.feedback_date) : '' }
 
   return (
-    <Modal eyebrow={header.eyebrow} title={header.title} onClose={nav.closeDetail}>
+    <Modal eyebrow={header.eyebrow} title={header.title} onClose={nav.closeDetail} theme={entity.kind}>
       {memory && <MemoryDetail memory={memory} />}
       {wish && <WishDetail wish={wish} />}
       {feedback && <FeedbackDetail feedback={feedback} />}

@@ -11,7 +11,7 @@ interface FeedbackFormProps {
   feedback?: Feedback
   memories: Memory[]
   wishes: Experience[]
-  onSubmit: (values: FeedbackFormValues) => void
+  onSubmit: (values: FeedbackFormValues) => Promise<void>
   onDirtyChange?: (dirty: boolean) => void
 }
 
@@ -28,6 +28,7 @@ function initialValues(feedback?: Feedback): FeedbackFormValues {
 export function FeedbackForm({ feedback, memories, wishes, onSubmit, onDirtyChange }: FeedbackFormProps) {
   const [values, setValues] = useState(() => initialValues(feedback))
   const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
   useDirtyTracker(JSON.stringify(values), onDirtyChange)
 
   const set = <K extends keyof FeedbackFormValues>(key: K, value: FeedbackFormValues[K]) => {
@@ -35,13 +36,19 @@ export function FeedbackForm({ feedback, memories, wishes, onSubmit, onDirtyChan
     setValues((v) => ({ ...v, [key]: value }))
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (saving) return
     if (!values.roberto_text.trim() && !values.tamiris_text.trim()) {
       setError('Escreva pelo menos um dos dois feedbacks.')
       return
     }
-    onSubmit(values)
+    setSaving(true)
+    try {
+      await onSubmit(values)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -52,22 +59,22 @@ export function FeedbackForm({ feedback, memories, wishes, onSubmit, onDirtyChan
       </label>
 
       <label className="field">
-        Feedback do {PARTNERS.roberto}
-        <textarea
-          rows={4}
-          value={values.roberto_text}
-          onChange={(e) => set('roberto_text', e.target.value)}
-          placeholder={`O que o ${PARTNERS.roberto} gostaria de compartilhar?`}
-        />
-      </label>
-
-      <label className="field">
         Feedback da {PARTNERS.tamiris}
         <textarea
           rows={4}
           value={values.tamiris_text}
           onChange={(e) => set('tamiris_text', e.target.value)}
           placeholder={`O que a ${PARTNERS.tamiris} gostaria de compartilhar?`}
+        />
+      </label>
+      
+      <label className="field">
+        Feedback do {PARTNERS.roberto}
+        <textarea
+          rows={4}
+          value={values.roberto_text}
+          onChange={(e) => set('roberto_text', e.target.value)}
+          placeholder={`O que o ${PARTNERS.roberto} gostaria de compartilhar?`}
         />
       </label>
 
@@ -95,8 +102,8 @@ export function FeedbackForm({ feedback, memories, wishes, onSubmit, onDirtyChan
         emptyText="Nenhum desejo cadastrado ainda."
       />
 
-      <button type="submit" className="btn btn--primary btn--full">
-        Salvar feedback
+      <button type="submit" className="btn btn--primary btn--full" disabled={saving}>
+        {saving ? 'Salvando…' : 'Salvar feedback'}
       </button>
     </form>
   )

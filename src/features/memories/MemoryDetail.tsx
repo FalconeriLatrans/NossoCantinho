@@ -25,7 +25,7 @@ export function MemoryDetail({ memory }: { memory: Memory }) {
       {memory.photos.length > 0 && (
         <div className="photo-gallery">
           {memory.photos.map((photo) => (
-            <PhotoImage key={photo.id} photoId={photo.id} alt={`Foto de ${memory.title}`} />
+            <PhotoImage key={photo.id} photo={photo} alt={`Foto de ${memory.title}`} />
           ))}
         </div>
       )}
@@ -33,14 +33,13 @@ export function MemoryDetail({ memory }: { memory: Memory }) {
       {(wish || feedbacks.length > 0) && (
         <RelatedSection title="Relacionados">
           {wish && (
-            <RelatedLink icon={<MapPin />} label="Desejo" onClick={() => nav.openDetail({ kind: 'wish', id: wish.id })}>
+            <RelatedLink theme="wish" icon={<MapPin />} label="Desejo" onClick={() => nav.openDetail({ kind: 'wish', id: wish.id })}>
               {wish.title}
             </RelatedLink>
           )}
           {feedbacks.map((f) => (
             <RelatedLink
-              key={f.id}
-              icon={<MessageCircleHeart />}
+              key={f.id} theme="feedback" icon={<MessageCircleHeart />}
               label="Feedback"
               onClick={() => nav.openDetail({ kind: 'feedback', id: f.id })}
             >

@@ -21,7 +21,7 @@ function initialValues(memory?: Memory, prefill?: Partial<MemoryFormValues>): Me
     memory_date: memory?.memory_date ?? todayISO(),
     is_anniversary: memory?.is_anniversary ?? false,
     experience_id: memory?.experience_id ?? null,
-    photos: memory?.photos.map((p) => ({ id: p.id })) ?? [],
+    photos: memory?.photos.map((p) => ({ id: p.id, path: p.path })) ?? [],
     coverId: memory ? (getCover(memory)?.id ?? null) : null,
     ...prefill,
   }
@@ -32,6 +32,10 @@ export function MemoryForm({ memory, prefill, wishes, onSubmit, onDirtyChange }:
   const [saving, setSaving] = useState(false)
 
   useDirtyTracker(JSON.stringify({ ...values, photos: values.photos.map((p) => p.id) }), onDirtyChange)
+
+  // Só desejos realizados podem virar memória. Um vínculo antigo com desejo
+  // não realizado continua visível para não sumir sem aviso.
+  const linkable = wishes.filter((w) => w.status === 'done' || w.id === values.experience_id)
 
   const set = <K extends keyof MemoryFormValues>(key: K, value: MemoryFormValues[K]) =>
     setValues((v) => ({ ...v, [key]: value }))
@@ -92,19 +96,20 @@ export function MemoryForm({ memory, prefill, wishes, onSubmit, onDirtyChange }:
       />
 
       <label className="field">
-        Desejo relacionado
+        Desejo realizado relacionado
         <select
           value={values.experience_id ?? ''}
           onChange={(e) => set('experience_id', e.target.value || null)}
-          disabled={wishes.length === 0}
+          disabled={linkable.length === 0}
         >
-          <option value="">{wishes.length ? 'Nenhum' : 'Nenhum desejo cadastrado'}</option>
-          {wishes.map((wish) => (
+          <option value="">{linkable.length ? 'Nenhum' : 'Nenhum desejo realizado ainda'}</option>
+          {linkable.map((wish) => (
             <option key={wish.id} value={wish.id}>
-              {wish.title} · {WISH_STATUS_LABEL[wish.status]}
+              {wish.status === 'done' ? wish.title : `${wish.title} · ${WISH_STATUS_LABEL[wish.status]} (ainda não realizado)`}
             </option>
           ))}
         </select>
+        <span className="field-hint">Só desejos marcados como “Realizado” podem ser vinculados a uma memória.</span>
       </label>
 
       <button type="submit" className="btn btn--primary btn--full" disabled={saving}>

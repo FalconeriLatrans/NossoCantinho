@@ -5,6 +5,7 @@ import { useConfirm } from '../../context/ConfirmContext'
 import { useToast } from '../../context/ToastContext'
 import type { Experience } from '../../types'
 import { datePart, todayISO } from '../../utils/date'
+import { errorMessage } from '../../utils/errors'
 
 /**
  * Fluxo "desejo realizado → criar memória vinculada".
@@ -42,7 +43,12 @@ export function useCompleteWish() {
 
   const completeWish = useCallback(
     async (wish: Experience) => {
-      markWishDone(wish.id)
+      try {
+        await markWishDone(wish.id)
+      } catch (error) {
+        toast(errorMessage(error, 'Não foi possível atualizar o desejo.'), 'error')
+        return
+      }
       toast('Desejo marcado como realizado.')
       await offerMemory(wish)
     },

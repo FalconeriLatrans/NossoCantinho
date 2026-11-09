@@ -5,7 +5,9 @@ import type { Experience, WishFormValues, WishStatus } from '../../types'
 
 interface WishFormProps {
   wish?: Experience
-  onSubmit: (values: WishFormValues) => void
+  /** Memórias vinculadas a este desejo: enquanto houver, ele continua "Realizado". */
+  linkedMemories?: number
+  onSubmit: (values: WishFormValues) => Promise<void>
   onDirtyChange?: (dirty: boolean) => void
 }
 
@@ -23,13 +25,15 @@ function initialValues(wish?: Experience): WishFormValues {
   }
 }
 
-export function WishForm({ wish, onSubmit, onDirtyChange }: WishFormProps) {
+export function WishForm({ wish, linkedMemories = 0, onSubmit, onDirtyChange }: WishFormProps) {
   const [values, setValues] = useState(() => initialValues(wish))
+  const [saving, setSaving] = useState(false)
   useDirtyTracker(JSON.stringify(values), onDirtyChange)
 
   const set = <K extends keyof WishFormValues>(key: K, value: WishFormValues[K]) =>
     setValues((v) => ({ ...v, [key]: value }))
 
+  const statusLocked = linkedMemories > 0 && wish?.status === 'done'
   const isPlanned = values.status === 'planned'
   const showDate = values.status !== 'wish'
 
@@ -38,13 +42,19 @@ export function WishForm({ wish, onSubmit, onDirtyChange }: WishFormProps) {
     ? [...WISH_CATEGORIES]
     : [values.category, ...WISH_CATEGORIES]
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    onSubmit({
-      ...values,
-      // "Desejamos" ainda não tem data marcada.
-      planned_at: values.status === 'wish' ? null : values.planned_at || null,
-    })
+    if (saving) return
+    setSaving(true)
+    try {
+      await onSubmit({
+        ...values,
+        // "Desejamos" ainda não tem data marcada.
+        planned_at: values.status === 'wish' ? null : values.planned_at || null,
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -75,7 +85,11 @@ export function WishForm({ wish, onSubmit, onDirtyChange }: WishFormProps) {
 
         <label className="field">
           Status
-          <select value={values.status} onChange={(e) => set('status', e.target.value as WishStatus)}>
+          <select
+            value={values.status}
+            onChange={(e) => set('status', e.target.value as WishStatus)}
+            disabled={statusLocked}
+          >
             {STATUSES.map((s) => (
               <option key={s} value={s}>
                 {WISH_STATUS_LABEL[s]}
@@ -123,9 +137,15 @@ export function WishForm({ wish, onSubmit, onDirtyChange }: WishFormProps) {
       </label>
 
       {isPlanned && <p className="field-hint">“Planejado” precisa de data, horário e local.</p>}
+      {statusLocked && (
+        <p className="field-hint">
+          Este desejo tem {linkedMemories === 1 ? 'uma memória vinculada' : `${linkedMemories} memórias vinculadas`}, por
+          isso continua como “Realizado”.
+        </p>
+      )}
 
-      <button type="submit" className="btn btn--primary btn--full">
-        Salvar desejo
+      <button type="submit" className="btn btn--primary btn--full" disabled={saving}>
+        {saving ? 'Salvando…' : 'Salvar desejo'}
       </button>
     </form>
   )

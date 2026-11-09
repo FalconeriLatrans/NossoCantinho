@@ -11,7 +11,7 @@ export function FeedbackCard({ feedback, onOpen }: { feedback: Feedback; onOpen:
   ].filter(Boolean)
 
   return (
-    <ClickableCard onOpen={onOpen} label={`Abrir feedback de ${formatLongDate(feedback.feedback_date)}`} className="feedback-card">
+    <ClickableCard theme="feedback" onOpen={onOpen} label={`Abrir feedback de ${formatLongDate(feedback.feedback_date)}`} className="feedback-card">
       <h3 className="feedback-card__date">{formatLongDate(feedback.feedback_date)}</h3>
       {feedback.roberto_text && <FeedbackEntry author={PARTNERS.roberto} text={feedback.roberto_text} clamp />}
       {feedback.tamiris_text && <FeedbackEntry author={PARTNERS.tamiris} text={feedback.tamiris_text} clamp />}

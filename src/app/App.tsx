@@ -9,7 +9,9 @@ import { FeedbacksPage } from '../features/feedbacks/FeedbacksPage'
 import { MemoriesPage } from '../features/memories/MemoriesPage'
 import { WishesPage } from '../features/wishes/WishesPage'
 import { useHashTab } from '../hooks/useHashTab'
+import { TAB_THEME, themeClass } from '../constants'
 import type { EntityRef, Tab } from '../types'
+import { ImportBanner, InviteBanner } from './Banners'
 import { DetailModal } from './DetailModal'
 import { EditorModal } from './EditorModal'
 import { NavigationContext, type EditorState, type Navigation } from './navigation'
@@ -21,7 +23,7 @@ const SEARCH_PLACEHOLDER: Partial<Record<Tab, string>> = {
 }
 
 export function App() {
-  const { data } = useCantinho()
+  const { data, status, loadError, reload } = useCantinho()
   const [tab, setTab] = useHashTab()
   const [query, setQuery] = useState('')
   const [detail, setDetail] = useState<EntityRef | null>(null)
@@ -53,16 +55,44 @@ export function App() {
             onChange={navigation.goToTab}
           />
 
-          {tab !== 'calendar' && (
-            <div className="toolbar">
-              <SearchBar value={query} onChange={setQuery} placeholder={SEARCH_PLACEHOLDER[tab]} />
+          <InviteBanner />
+          <ImportBanner />
+
+          {status === 'loading' && (
+            <p className="loading" role="status">
+              <span className="loading__dot" aria-hidden /> Carregando nossas coisas…
+            </p>
+          )}
+
+          {status === 'error' && (
+            <div className="empty-state">
+              <p className="empty-state__title">Não foi possível carregar os dados.</p>
+              {loadError && <p className="empty-state__description">{loadError.message}</p>}
+              {loadError?.detail && (
+                <p className="error-detail">
+                  Detalhe técnico: <code>{loadError.detail}</code>
+                </p>
+              )}
+              <button type="button" className="btn btn--primary" onClick={() => reload().catch(() => undefined)}>
+                Tentar de novo
+              </button>
             </div>
           )}
 
-          {tab === 'memories' && <MemoriesPage query={query} />}
-          {tab === 'wishes' && <WishesPage query={query} />}
-          {tab === 'feedbacks' && <FeedbacksPage query={query} />}
-          {tab === 'calendar' && <CalendarPage />}
+          {status === 'ready' && (
+            <div className={`page ${themeClass(TAB_THEME[tab])}`}>
+              {tab !== 'calendar' && (
+                <div className="toolbar">
+                  <SearchBar value={query} onChange={setQuery} placeholder={SEARCH_PLACEHOLDER[tab]} />
+                </div>
+              )}
+
+              {tab === 'memories' && <MemoriesPage query={query} />}
+              {tab === 'wishes' && <WishesPage query={query} />}
+              {tab === 'feedbacks' && <FeedbacksPage query={query} />}
+              {tab === 'calendar' && <CalendarPage />}
+            </div>
+          )}
         </main>
       </div>
 
