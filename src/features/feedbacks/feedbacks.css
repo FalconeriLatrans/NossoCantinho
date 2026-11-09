@@ -1,0 +1,41 @@
+.feedback-list {
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+}
+
+.feedback-card {
+  padding: 18px 20px;
+}
+
+.feedback-card__date {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.feedback-entry {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: #faf5f0;
+}
+
+.feedback-entry b {
+  font-size: 13px;
+  color: #a66559;
+}
+
+.feedback-entry p {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #65564f;
+  overflow-wrap: anywhere;
+}
+
+.feedback-entry p.is-clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

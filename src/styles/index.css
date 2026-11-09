@@ -1,0 +1,8 @@
+/* Ponto de entrada dos estilos globais. Estilos específicos de cada
+   funcionalidade ficam ao lado dela, em src/features/<feature>/<feature>.css */
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './forms.css';
+@import './dialog.css';

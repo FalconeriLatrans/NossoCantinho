@@ -1,5 +1,15 @@
 node_modules
 dist
+.vercel
+
+# Variáveis de ambiente (nunca versionar)
 .env
 .env.local
+.env.*.local
+
+# Sistema / editor
 .DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea

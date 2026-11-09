@@ -1,0 +1,127 @@
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: #75665e;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: #4e403a;
+  /* 16px evita o zoom automático do iOS ao focar o campo */
+  font-size: 16px;
+}
+
+.field textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--focus-ring);
+}
+
+.field-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.field-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.field-group {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #eee3da;
+  border-radius: var(--radius-md);
+  min-width: 0;
+}
+
+.field-group legend {
+  padding: 0 5px;
+  font-size: 12px;
+  color: #a06f61;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.check input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.check--small {
+  font-size: 12px;
+}
+
+.check__hint {
+  color: var(--color-text-subtle);
+}
+
+/* ---------- Lista recolhível ---------- */
+.dropdown {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.dropdown summary {
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #876d61;
+  font-size: 14px;
+}
+
+.dropdown__options {
+  display: grid;
+  gap: 10px;
+  max-height: 220px;
+  overflow: auto;
+  padding: 4px 12px 12px;
+}
+
+@media (max-width: 480px) {
+  .form__row {
+    grid-template-columns: 1fr;
+  }
+}

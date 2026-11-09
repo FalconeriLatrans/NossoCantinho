@@ -1,0 +1,73 @@
+/* ---------- Galeria no detalhe ---------- */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.photo-gallery img,
+.photo-gallery .photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Gerenciador de fotos no formulário ---------- */
+.photo-manager {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 12px;
+}
+
+.photo-manager__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.photo-manager__img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 7px;
+  background: #f1e9e1;
+  border: 2px solid transparent;
+}
+
+.photo-manager__item.is-cover .photo-manager__img {
+  border-color: var(--color-accent);
+}
+
+.photo-manager__item .icon-btn--danger {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.photo-manager__add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  aspect-ratio: 1;
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: 7px;
+  color: var(--color-accent);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.photo-manager__add:hover,
+.photo-manager__add:focus-within {
+  background: var(--color-accent-soft);
+}
+
+.photo-manager__add:focus-within {
+  box-shadow: var(--focus-ring);
+}

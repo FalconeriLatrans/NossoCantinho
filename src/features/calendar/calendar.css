@@ -1,0 +1,135 @@
+.calendar {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.calendar__head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.calendar__title {
+  margin: 0;
+  min-width: 210px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.calendar__today {
+  position: absolute;
+  top: 22px;
+  right: 18px;
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+
+.calendar__weekday {
+  padding: 10px 4px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #9c8d84;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calendar__day {
+  min-width: 0;
+  min-height: 100px;
+  padding: 7px;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calendar__day.is-blank {
+  background: var(--color-surface-muted);
+}
+
+.calendar__number {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7b6d65;
+}
+
+.calendar__day.is-today .calendar__number {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.calendar__event {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  padding: 4px 5px;
+  border: 0;
+  border-radius: 5px;
+  font-size: 10px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar__event--memory {
+  background: #f8e9e5;
+  color: #a45e55;
+}
+
+.calendar__event--wish {
+  background: #eaf0e7;
+  color: #637c5e;
+}
+
+.calendar__legend {
+  margin: 13px 0 0;
+  font-size: 11px;
+  color: #93867e;
+}
+
+@media (max-width: 650px) {
+  .calendar {
+    padding: 10px 8px;
+  }
+
+  .calendar__head {
+    gap: 10px;
+  }
+
+  .calendar__title {
+    min-width: 0;
+    font-size: 18px;
+  }
+
+  .calendar__today {
+    position: static;
+    display: block;
+    margin: -8px auto 12px;
+  }
+
+  .calendar__day {
+    min-height: 68px;
+    padding: 3px;
+  }
+
+  .calendar__event {
+    font-size: 9px;
+    padding: 3px;
+  }
+}
