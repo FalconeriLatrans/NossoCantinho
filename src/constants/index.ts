@@ -76,6 +76,8 @@ export const PHOTO_SETTINGS = {
 } as const
 
 export const TOAST_DURATION_MS = 3500
+/** Erros ficam mais tempo na tela, para dar tempo de ler (ou fotografar) o detalhe. */
+export const ERROR_TOAST_DURATION_MS = 9000
 
 /** Bucket privado do Supabase Storage onde ficam as fotos. */
 export const PHOTO_BUCKET = 'memory-photos'

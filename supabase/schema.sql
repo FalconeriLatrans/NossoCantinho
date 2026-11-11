@@ -265,28 +265,54 @@ create policy "members manage feedbacks" on public.feedbacks
   for all to authenticated
   using (public.is_couple_member(couple_id)) with check (public.is_couple_member(couple_id));
 
--- Vínculos N:N: os dois lados precisam ser do mesmo casal do usuário.
+-- Vínculos N:N: feedback e item precisam ser do mesmo casal do usuário.
+-- (SECURITY DEFINER: checa direto nas tabelas, sem depender de outras regras de leitura.)
+create or replace function public.can_link_feedback_memory(p_feedback uuid, p_memory uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.feedbacks f
+    join public.memories m on m.couple_id = f.couple_id
+    join public.couple_members cm on cm.couple_id = f.couple_id
+    where f.id = p_feedback and m.id = p_memory and cm.user_id = auth.uid()
+  );
+$$;
+
+create or replace function public.can_link_feedback_experience(p_feedback uuid, p_experience uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.feedbacks f
+    join public.experiences e on e.couple_id = f.couple_id
+    join public.couple_members cm on cm.couple_id = f.couple_id
+    where f.id = p_feedback and e.id = p_experience and cm.user_id = auth.uid()
+  );
+$$;
+
+revoke all on function public.can_link_feedback_memory(uuid, uuid) from public, anon;
+revoke all on function public.can_link_feedback_experience(uuid, uuid) from public, anon;
+grant execute on function public.can_link_feedback_memory(uuid, uuid) to authenticated;
+grant execute on function public.can_link_feedback_experience(uuid, uuid) to authenticated;
+
 create policy "members manage feedback memory links" on public.feedback_memories
   for all to authenticated
-  using (exists (
-    select 1 from public.feedbacks f join public.memories m on m.id = feedback_memories.memory_id
-    where f.id = feedback_memories.feedback_id and f.couple_id = m.couple_id and public.is_couple_member(f.couple_id)
-  ))
-  with check (exists (
-    select 1 from public.feedbacks f join public.memories m on m.id = feedback_memories.memory_id
-    where f.id = feedback_memories.feedback_id and f.couple_id = m.couple_id and public.is_couple_member(f.couple_id)
-  ));
+  using (public.can_link_feedback_memory(feedback_id, memory_id))
+  with check (public.can_link_feedback_memory(feedback_id, memory_id));
 
 create policy "members manage feedback experience links" on public.feedback_experiences
   for all to authenticated
-  using (exists (
-    select 1 from public.feedbacks f join public.experiences e on e.id = feedback_experiences.experience_id
-    where f.id = feedback_experiences.feedback_id and f.couple_id = e.couple_id and public.is_couple_member(f.couple_id)
-  ))
-  with check (exists (
-    select 1 from public.feedbacks f join public.experiences e on e.id = feedback_experiences.experience_id
-    where f.id = feedback_experiences.feedback_id and f.couple_id = e.couple_id and public.is_couple_member(f.couple_id)
-  ));
+  using (public.can_link_feedback_experience(feedback_id, experience_id))
+  with check (public.can_link_feedback_experience(feedback_id, experience_id));
 
 -- -----------------------------------------------------------------------------
 -- Storage: bucket privado de fotos

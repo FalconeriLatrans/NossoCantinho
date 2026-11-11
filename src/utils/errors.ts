@@ -1,11 +1,8 @@
 import { RepositoryError } from '../services/repositories/types'
 
-/** Mensagem legível de um erro qualquer, com texto padrão de reserva. */
+/** Mensagem legível de um erro qualquer, com o detalhe técnico do Supabase quando houver. */
 export function errorMessage(error: unknown, fallback: string): string {
   if (!(error instanceof Error) || !error.message) return fallback
-  // Mensagem genérica? Anexa o detalhe técnico para facilitar o diagnóstico.
-  if (error instanceof RepositoryError && error.detail && error.message.startsWith('Não foi possível')) {
-    return `${error.message} (${error.detail})`
-  }
+  if (error instanceof RepositoryError && error.detail) return `${error.message} (${error.detail})`
   return error.message
 }

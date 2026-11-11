@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
-import { TOAST_DURATION_MS } from '../constants'
+import { ERROR_TOAST_DURATION_MS, TOAST_DURATION_MS } from '../constants'
 
 type ToastTone = 'default' | 'error'
 
@@ -21,7 +21,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     // Cancela o timer anterior: antes, uma mensagem nova sumia antes do tempo.
     window.clearTimeout(timer.current)
     setToast({ id: Date.now(), message, tone })
-    timer.current = window.setTimeout(() => setToast(null), TOAST_DURATION_MS)
+    const duration = tone === 'error' ? ERROR_TOAST_DURATION_MS : TOAST_DURATION_MS
+    timer.current = window.setTimeout(() => setToast(null), duration)
   }, [])
 
   useEffect(() => () => window.clearTimeout(timer.current), [])

@@ -497,3 +497,11 @@
 .error-detail code {
   user-select: all;
 }
+
+/* Erros podem trazer o detalhe técnico: caixa em vez de pílula */
+.toast--error {
+  border-radius: var(--radius-lg);
+  max-width: 560px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}

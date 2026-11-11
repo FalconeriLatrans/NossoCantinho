@@ -305,7 +305,16 @@ export function createSupabaseRepository({ client, coupleId, userId }: SupabaseR
         throw error
       }
 
-      await syncPhotoRows(memory, previous, newPaths)
+      try {
+        await syncPhotoRows(memory, previous, newPaths)
+      } catch (error) {
+        // Memória nova: desfaz (linha + arquivos) para não criar duplicada ao tentar de novo.
+        if (isNew) {
+          await client.from('memories').delete().eq('id', memory.id)
+          await removeFiles([...newPaths.values()]).catch(() => undefined)
+        }
+        throw error
+      }
 
       const photos: Photo[] = memory.photos.map((p) => ({ ...p, path: p.path ?? newPaths.get(p.id) }))
       return { ...memory, photos }
@@ -350,8 +359,14 @@ export function createSupabaseRepository({ client, coupleId, userId }: SupabaseR
         : await client.from('feedbacks').update(fields).eq('id', feedback.id)
       ensureOk(error, 'salvar o feedback')
 
-      await replaceLinks('feedback_memories', 'memory_id', feedback.id, feedback.memory_ids, isNew)
-      await replaceLinks('feedback_experiences', 'experience_id', feedback.id, feedback.experience_ids, isNew)
+      try {
+        await replaceLinks('feedback_memories', 'memory_id', feedback.id, feedback.memory_ids, isNew)
+        await replaceLinks('feedback_experiences', 'experience_id', feedback.id, feedback.experience_ids, isNew)
+      } catch (error) {
+        // Feedback novo: desfaz para o usuário poder tentar de novo sem criar duplicado.
+        if (isNew) await client.from('feedbacks').delete().eq('id', feedback.id)
+        throw error
+      }
       return feedback
     },
 
